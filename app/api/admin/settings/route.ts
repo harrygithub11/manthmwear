@@ -56,6 +56,8 @@ export async function GET(request: NextRequest) {
       metaKeywords: settings.metaKeywords || '',
       emailFrom: settings.emailFrom || '',
       adminNotificationEmail: settings.adminNotificationEmail || '',
+      facebookPixelId: settings.facebookPixelId || '',
+      facebookPixelEnabled: settings.facebookPixelEnabled || false,
       maintenanceMode: settings.maintenanceMode || false,
       maintenanceMessage: settings.maintenanceMessage || '',
     })
@@ -102,6 +104,8 @@ export async function PUT(request: NextRequest) {
       metaKeywords,
       emailFrom,
       adminNotificationEmail,
+      facebookPixelId,
+      facebookPixelEnabled,
       maintenanceMode,
       maintenanceMessage
     } = body
@@ -155,6 +159,8 @@ export async function PUT(request: NextRequest) {
       metaKeywords: metaKeywords || null,
       emailFrom: emailFrom || null,
       adminNotificationEmail: adminNotificationEmail || null,
+      facebookPixelId: facebookPixelId || null,
+      facebookPixelEnabled: facebookPixelEnabled || false,
       maintenanceMode: maintenanceMode || false,
       maintenanceMessage: maintenanceMessage || null,
     }
