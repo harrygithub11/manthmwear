@@ -40,6 +40,8 @@ export default function SiteSettingsPage() {
     metaKeywords: '',
     razorpayKeyId: '',
     razorpayKeySecret: '',
+    facebookPixelId: '',
+    facebookPixelEnabled: false,
     maintenanceMode: false,
     maintenanceMessage: '',
   })
@@ -462,6 +464,61 @@ export default function SiteSettingsPage() {
               </div>
               <div className="text-xs text-gray-500">
                 💡 Note: Razorpay keys are stored securely and used for payment processing.
+              </div>
+            </div>
+          </div>
+
+          {/* Facebook Pixel */}
+          <div className="bg-white border border-gray-border p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Share2 className="w-6 h-6" />
+              <h2 className="text-xl font-black">Facebook Pixel</h2>
+            </div>
+
+            <div className="space-y-4">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.facebookPixelEnabled}
+                  onChange={(e) => setSettings({ ...settings, facebookPixelEnabled: e.target.checked })}
+                  className="w-5 h-5"
+                />
+                <div>
+                  <div className="font-bold">Enable Facebook Pixel</div>
+                  <div className="text-sm text-gray-secondary">Track conversions and optimize ads</div>
+                </div>
+              </label>
+
+              {settings.facebookPixelEnabled && (
+                <div>
+                  <label className="block text-sm font-bold mb-2">Facebook Pixel ID</label>
+                  <input
+                    type="text"
+                    value={settings.facebookPixelId || ''}
+                    onChange={(e) => setSettings({ ...settings, facebookPixelId: e.target.value })}
+                    className="w-full px-4 py-3 border-2 border-gray-border focus:border-text-black outline-none font-mono text-sm"
+                    placeholder="123456789012345"
+                  />
+                  <p className="text-xs text-gray-500 mt-2">
+                    Find your Pixel ID in Facebook Events Manager → Data Sources → Pixels
+                  </p>
+                </div>
+              )}
+
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded">
+                <p className="text-sm text-blue-900 mb-2">
+                  <strong>📊 Tracked Events:</strong>
+                </p>
+                <ul className="text-xs text-blue-800 space-y-1 ml-4 list-disc">
+                  <li><strong>PageView</strong> - Every page visit</li>
+                  <li><strong>ViewContent</strong> - Product page views</li>
+                  <li><strong>AddToCart</strong> - Items added to cart</li>
+                  <li><strong>InitiateCheckout</strong> - Checkout started</li>
+                  <li><strong>Purchase</strong> - Order completed</li>
+                  <li><strong>Search</strong> - Product searches</li>
+                  <li><strong>Lead</strong> - Newsletter signups, support tickets</li>
+                  <li><strong>CompleteRegistration</strong> - Account creation</li>
+                </ul>
               </div>
             </div>
           </div>

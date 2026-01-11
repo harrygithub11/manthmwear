@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { guestCart } from '@/lib/guest-cart'
 import { toast } from '@/components/toast'
 import ColorDot from '@/components/common/ColorDot'
+import { trackViewContent, trackAddToCart } from '@/components/FacebookPixel'
 
 // Helper function to get color code from color name
 const getColorCode = (colorName: string): string => {
@@ -143,6 +144,20 @@ export default function ProductDetailClient({
     const packs = Array.from(new Set(product.variants.map((v: any) => v.pack as number))) as number[]
     return packs.sort((a, b) => a - b)
   }, [product.variants])
+
+  // Track Facebook Pixel ViewContent event when product loads
+  useEffect(() => {
+    if (product && product.variants && product.variants.length > 0) {
+      const firstVariant = product.variants[0]
+      trackViewContent({
+        content_name: product.name,
+        content_ids: [product.id],
+        content_type: 'product',
+        value: firstVariant.price,
+        currency: 'INR'
+      })
+    }
+  }, [product])
 
   const uniqueSizes = useMemo(() => {
     const sizes = product.variants
@@ -348,6 +363,15 @@ export default function ProductDetailClient({
 
     const colorSummary = selectedPack === 1 ? packColors[0] : packColors.join(', ')
     toast.success(`Added ${quantity} pack(s) to cart! (${colorSummary})`)
+
+    // Track Facebook Pixel AddToCart event
+    trackAddToCart({
+      content_name: product.name,
+      content_ids: [currentVariant.id],
+      content_type: 'product',
+      value: (currentVariant.price / 100) * quantity,
+      currency: 'INR'
+    })
   }
 
   const handleBuyNow = () => {

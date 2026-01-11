@@ -5,6 +5,7 @@ import Footer from '@/components/Footer'
 import Providers from '@/components/Providers'
 import { SiteSettingsProvider } from '@/components/SiteSettingsProvider'
 import { ToastContainer } from '@/components/toast'
+import { FacebookPixelWrapper } from '@/components/FacebookPixelWrapper'
 
 export const metadata: Metadata = {
   title: 'MANTHM - Premium Men\'s Underwear | Made in India',
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body className="overflow-x-hidden">
         <Providers>
           <SiteSettingsProvider>
+            <FacebookPixelWrapper />
             <Navigation />
             <ToastContainer />
             <main className="overflow-x-hidden">{children}</main>

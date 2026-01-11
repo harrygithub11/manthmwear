@@ -263,6 +263,10 @@ model sitesettings {
   razorpayKeyId         String?
   razorpayKeySecret     String?
   
+  // Facebook Pixel
+  facebookPixelId       String?
+  facebookPixelEnabled  Boolean  @default(false)
+  
   // Payment Methods
   codEnabled            Boolean  @default(true)
   onlinePaymentEnabled  Boolean  @default(true)

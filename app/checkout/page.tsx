@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Script from 'next/script'
 import { guestCart } from '@/lib/guest-cart'
 import { toast } from '@/components/toast'
+import { trackInitiateCheckout, trackPurchase } from '@/components/FacebookPixel'
 
 declare global {
   interface Window {
@@ -66,6 +67,18 @@ export default function CheckoutPage() {
       return
     }
     setCartItems(items)
+
+    // Track Facebook Pixel InitiateCheckout event
+    if (items.length > 0) {
+      const totalValue = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+      trackInitiateCheckout({
+        content_ids: items.map(item => item.variantId),
+        contents: items.map(item => ({ id: item.variantId, quantity: item.quantity })),
+        value: totalValue,
+        currency: 'INR',
+        num_items: items.reduce((sum, item) => sum + item.quantity, 0)
+      })
+    }
 
     // Fetch shipping settings and Razorpay key
     fetch('/api/site-settings')
@@ -192,6 +205,15 @@ export default function CheckoutPage() {
 
       // If COD, redirect to success page
       if (paymentMethod === 'cod') {
+        // Track Facebook Pixel Purchase event
+        trackPurchase({
+          content_ids: cartItems.map(item => item.variantId),
+          contents: cartItems.map(item => ({ id: item.variantId, quantity: item.quantity })),
+          value: total,
+          currency: 'INR',
+          num_items: cartItems.reduce((sum, item) => sum + item.quantity, 0)
+        })
+
         guestCart.clear()
         toast.success('Order placed successfully!')
         setTimeout(() => router.push(`/orders/success?orderId=${result.orderId}`), 500)
@@ -230,6 +252,15 @@ export default function CheckoutPage() {
           })
 
           if (verifyRes.ok) {
+            // Track Facebook Pixel Purchase event
+            trackPurchase({
+              content_ids: cartItems.map(item => item.variantId),
+              contents: cartItems.map(item => ({ id: item.variantId, quantity: item.quantity })),
+              value: total,
+              currency: 'INR',
+              num_items: cartItems.reduce((sum, item) => sum + item.quantity, 0)
+            })
+
             guestCart.clear()
             toast.success('Payment successful!')
             setTimeout(() => router.push(`/orders/success?orderId=${orderId}`), 500)
