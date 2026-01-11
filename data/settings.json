@@ -1,0 +1,14 @@
+{
+  "storeName": "MANTHM",
+  "storeEmail": "support@manthm.com",
+  "storePhone": "+91 98765 43210",
+  "currency": "INR",
+  "taxRate": 0,
+  "shippingFee": 59,
+  "freeShippingThreshold": 1999,
+  "razorpayKeyId": "rzp_test_RVyqWBjSppOuuh",
+  "razorpayKeySecret": "P9el6KQGEa0Csf1cZTwg6TUk",
+  "emailNotifications": true,
+  "orderNotifications": true,
+  "lowStockAlerts": true
+}
