@@ -1,0 +1,76 @@
+═══════════════════════════════════════════════════════════════
+  COPY-PASTE THIS ENTIRE BLOCK INTO YOUR SERVER TERMINAL
+═══════════════════════════════════════════════════════════════
+
+cd /home/manthmwear/htdocs/manthmwear.com && \
+echo "🚀 Starting Server Git Setup..." && \
+echo "💾 Backing up .env file..." && \
+cp .env /tmp/.env.manthmwear.backup && \
+echo "✅ .env backed up" && \
+echo "🗑️  Removing old .git..." && \
+rm -rf .git && \
+echo "🔧 Initializing Git..." && \
+git init && \
+git config user.name "harrygithub11" && \
+git config user.email "harrymailbox11@gmail.com" && \
+echo "🔗 Adding GitHub remote..." && \
+git remote add origin https://github.com/harrygithub11/manthmwear.git && \
+echo "📥 Fetching from GitHub..." && \
+git fetch origin && \
+echo "⚠️  Resetting to match GitHub..." && \
+git reset --hard origin/main && \
+echo "📂 Restoring .env file..." && \
+cp /tmp/.env.manthmwear.backup .env && \
+echo "🔐 Fixing ownership..." && \
+chown -R manthmwear:manthmwear . && \
+echo "📦 Installing dependencies..." && \
+npm install && \
+echo "🔧 Generating Prisma Client..." && \
+npx prisma generate && \
+echo "🏗️  Building Next.js..." && \
+npm run build && \
+echo "🔧 Making deploy script executable..." && \
+chmod +x deploy-server.sh && \
+echo "🔄 Restarting PM2..." && \
+pm2 restart manthmwear && \
+pm2 save && \
+echo "" && \
+echo "✅ ═══════════════════════════════════════════════════════" && \
+echo "✅ SERVER SETUP COMPLETE!" && \
+echo "✅ ═══════════════════════════════════════════════════════" && \
+echo "" && \
+echo "📊 PM2 Status:" && \
+pm2 list && \
+echo "" && \
+echo "🎉 Your server is now synced with GitHub!" && \
+echo "" && \
+echo "Next steps:" && \
+echo "  • Check logs: pm2 logs manthmwear" && \
+echo "  • Future deployments: ./deploy-server.sh" && \
+echo ""
+
+═══════════════════════════════════════════════════════════════
+  END OF COMMAND BLOCK
+═══════════════════════════════════════════════════════════════
+
+WHAT THIS DOES:
+✅ Backs up your .env file
+✅ Removes conflicting .git directory
+✅ Initializes fresh Git repository
+✅ Connects to GitHub
+✅ Downloads latest code from GitHub
+✅ Restores your .env file
+✅ Fixes file ownership
+✅ Installs dependencies
+✅ Generates Prisma Client
+✅ Builds Next.js application
+✅ Makes deploy script executable
+✅ Restarts PM2 with latest code
+
+AFTER RUNNING THIS:
+• Your server will be synced with GitHub
+• Future deployments: just run ./deploy-server.sh
+• Check status: pm2 status
+• View logs: pm2 logs manthmwear
+
+═══════════════════════════════════════════════════════════════
