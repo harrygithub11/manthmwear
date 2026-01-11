@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from '@/components/toast'
 import AdminLayout from '@/components/admin/AdminLayout'
-import { Settings, CreditCard, DollarSign, Truck, Package, Lock, Share2, AlertTriangle, Store, Mail, Search } from 'lucide-react'
+import { Settings, CreditCard, DollarSign, Truck, Package, Lock, Share2, AlertTriangle, Store, Mail, Search, BarChart3 } from 'lucide-react'
 
 export default function AdminSettingsPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [activeTab, setActiveTab] = useState<'general' | 'payment' | 'shipping' | 'social' | 'seo' | 'email' | 'security' | 'maintenance'>('general')
+  const [activeTab, setActiveTab] = useState<'general' | 'payment' | 'shipping' | 'social' | 'seo' | 'email' | 'security' | 'maintenance' | 'tracking'>('general')
   const [settings, setSettings] = useState({
     // General/Branding
     siteName: 'MANTHM',
@@ -43,6 +43,9 @@ export default function AdminSettingsPage() {
     // Email
     emailFrom: '',
     adminNotificationEmail: '',
+    // Facebook Pixel
+    facebookPixelId: '',
+    facebookPixelEnabled: false,
     // Maintenance
     maintenanceMode: false,
     maintenanceMessage: '',
@@ -107,6 +110,8 @@ export default function AdminSettingsPage() {
           metaKeywords: data.metaKeywords || '',
           emailFrom: data.emailFrom || '',
           adminNotificationEmail: data.adminNotificationEmail || '',
+          facebookPixelId: data.facebookPixelId || '',
+          facebookPixelEnabled: data.facebookPixelEnabled || false,
           maintenanceMode: data.maintenanceMode || false,
           maintenanceMessage: data.maintenanceMessage || '',
         })
@@ -252,6 +257,7 @@ export default function AdminSettingsPage() {
             { id: 'social', label: 'Social', icon: Share2 },
             { id: 'seo', label: 'SEO', icon: Search },
             { id: 'email', label: 'Email', icon: Mail },
+            { id: 'tracking', label: 'Tracking', icon: BarChart3 },
             { id: 'security', label: 'Security', icon: Lock },
             { id: 'maintenance', label: 'Maintenance', icon: AlertTriangle },
           ].map((tab) => {
@@ -908,6 +914,83 @@ export default function AdminSettingsPage() {
                 <div className="text-sm text-yellow-800">
                   <strong>⚠️ Warning:</strong> After changing your password, you will need to log in again with the new password.
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tracking Tab */}
+        {activeTab === 'tracking' && (
+          <div className="bg-white border border-gray-border p-6 mb-6">
+            <div className="flex items-center gap-3 mb-6">
+              <BarChart3 className="w-6 h-6" />
+              <h2 className="text-xl font-black">Facebook Pixel</h2>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-start justify-between p-4 border-2 border-gray-border rounded">
+                <div className="flex-1">
+                  <div className="font-bold mb-1">Enable Facebook Pixel</div>
+                  <div className="text-sm text-gray-secondary">
+                    Track conversions and optimize your Facebook/Instagram ads
+                  </div>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer ml-4">
+                  <input
+                    type="checkbox"
+                    checked={settings.facebookPixelEnabled}
+                    onChange={(e) => setSettings({ ...settings, facebookPixelEnabled: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              {settings.facebookPixelEnabled && (
+                <div>
+                  <label className="block text-sm font-bold mb-2">
+                    Facebook Pixel ID
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.facebookPixelId}
+                    onChange={(e) => setSettings({ ...settings, facebookPixelId: e.target.value })}
+                    className="w-full px-4 py-3 border-2 border-gray-border focus:border-text-black outline-none font-mono text-sm"
+                    placeholder="123456789012345"
+                  />
+                  <p className="text-xs text-gray-secondary mt-2">
+                    Find your Pixel ID in Facebook Events Manager → Data Sources → Pixels
+                  </p>
+                </div>
+              )}
+
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded">
+                <p className="text-sm text-blue-900 mb-2">
+                  <strong>📊 Tracked Events:</strong>
+                </p>
+                <ul className="text-xs text-blue-800 space-y-1 ml-4 list-disc">
+                  <li><strong>PageView</strong> - Every page visit</li>
+                  <li><strong>ViewContent</strong> - Product page views</li>
+                  <li><strong>AddToCart</strong> - Items added to cart</li>
+                  <li><strong>InitiateCheckout</strong> - Checkout page visits</li>
+                  <li><strong>Purchase</strong> - Completed orders (COD & Online)</li>
+                  <li><strong>Search</strong> - Product searches</li>
+                  <li><strong>Lead</strong> - Newsletter signups, support tickets</li>
+                  <li><strong>CompleteRegistration</strong> - Account creation</li>
+                </ul>
+              </div>
+
+              <div className="p-4 bg-gray-50 border border-gray-200 rounded">
+                <p className="text-sm text-gray-700 mb-2">
+                  <strong>🎯 Benefits:</strong>
+                </p>
+                <ul className="text-xs text-gray-600 space-y-1 ml-4 list-disc">
+                  <li>Track conversion funnel and optimize ads</li>
+                  <li>Create custom audiences for retargeting</li>
+                  <li>Measure return on ad spend (ROAS)</li>
+                  <li>Build lookalike audiences</li>
+                  <li>Retarget cart abandoners</li>
+                </ul>
               </div>
             </div>
           </div>
