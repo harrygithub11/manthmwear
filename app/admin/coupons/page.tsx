@@ -49,7 +49,7 @@ export default function CouponsPage() {
 
   const fetchCoupons = async () => {
     try {
-      const token = localStorage.getItem('adminToken')
+      const token = localStorage.getItem('admin_token')
       const res = await fetch('/api/admin/coupons', {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -68,7 +68,7 @@ export default function CouponsPage() {
     e.preventDefault()
     
     try {
-      const token = localStorage.getItem('adminToken')
+      const token = localStorage.getItem('admin_token')
       const url = editingCoupon
         ? `/api/admin/coupons/${editingCoupon.id}`
         : '/api/admin/coupons'
@@ -126,7 +126,7 @@ export default function CouponsPage() {
     if (!confirm('Are you sure you want to delete this coupon?')) return
 
     try {
-      const token = localStorage.getItem('adminToken')
+      const token = localStorage.getItem('admin_token')
       const res = await fetch(`/api/admin/coupons/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
@@ -146,7 +146,7 @@ export default function CouponsPage() {
 
   const toggleActive = async (coupon: Coupon) => {
     try {
-      const token = localStorage.getItem('adminToken')
+      const token = localStorage.getItem('admin_token')
       const res = await fetch(`/api/admin/coupons/${coupon.id}`, {
         method: 'PATCH',
         headers: {
