@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react'
 import { guestCart, GuestCartItem } from '@/lib/guest-cart'
+import { trackInitiateCheckout } from '@/components/FacebookPixel'
 
 export default function CartPage() {
   const router = useRouter()
@@ -134,6 +135,21 @@ export default function CartPage() {
   const shipping = subtotal >= freeShippingThreshold ? 0 : shippingFee
   const tax = Math.round((subtotal + shipping) * (taxRate / 100) * 100) / 100
   const total = Math.round((subtotal + shipping + tax) * 100) / 100
+
+  const handleInitiateCheckout = () => {
+    try {
+      const contents = cartItems.map((item) => ({ id: item.variantId, quantity: item.quantity }))
+      const contentIds = cartItems.map((item) => item.variantId)
+      trackInitiateCheckout({
+        content_ids: contentIds,
+        contents,
+        value: total,
+        currency: 'INR',
+        num_items: cartItems.reduce((n, i) => n + i.quantity, 0),
+      })
+    } catch {}
+    router.push('/checkout')
+  }
 
   return (
     <div className="min-h-screen pt-20 bg-gray-light">
@@ -281,12 +297,12 @@ export default function CartPage() {
                 </div>
               )}
 
-              <Link
-                href="/checkout"
+              <button
+                onClick={handleInitiateCheckout}
                 className="block w-full bg-text-black text-white py-4 text-center text-sm font-bold tracking-wide uppercase hover:bg-gray-800 transition-colors mb-4"
               >
                 Proceed to Checkout
-              </Link>
+              </button>
 
               <Link
                 href="/shop"

@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 import { toast } from '@/components/toast'
 import { guestCart } from '@/lib/guest-cart'
 import ColorDot from '@/components/common/ColorDot'
+import { trackAddToCart } from '@/components/FacebookPixel'
 
 // Helper function to get color code from color name
 const getColorCode = (colorName: string): string => {
@@ -328,6 +329,19 @@ export default function QuickBuyModal({ product, onClose, initialSelected, initi
       price: currentVariant.price,
       packColors: selectedPack > 1 ? packColors : undefined,
     })
+
+    // Facebook Pixel: AddToCart
+    try {
+      trackAddToCart({
+        content_name: product.name,
+        content_ids: [currentVariant.id],
+        content_type: 'product',
+        value: Number(currentVariant.price) * quantity,
+        currency: 'INR',
+      })
+    } catch (e) {
+      // ignore pixel errors
+    }
 
     const colorSummary = selectedPack === 1 ? selectedColor : packColors.join(', ')
     toast.success(`Added ${quantity} pack(s) to cart! (${colorSummary})`)

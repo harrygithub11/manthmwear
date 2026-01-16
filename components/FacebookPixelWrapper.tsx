@@ -8,7 +8,14 @@ export function FacebookPixelWrapper() {
   const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
-    // Fetch site settings to get Facebook Pixel ID
+    // 1) Immediate fallback from env or default ID so pixel loads without backend settings
+    const envId = process.env.NEXT_PUBLIC_FB_PIXEL_ID || '1395089012068157'
+    if (envId) {
+      setPixelId(envId)
+      setEnabled(true)
+    }
+
+    // 2) If site-settings API exists, prefer its dynamic config
     const fetchPixelSettings = async () => {
       try {
         const response = await fetch('/api/site-settings')
@@ -20,7 +27,8 @@ export function FacebookPixelWrapper() {
           }
         }
       } catch (error) {
-        console.error('Failed to load Facebook Pixel settings:', error)
+        // Silently ignore; fallback already applied
+        console.warn('Facebook Pixel settings API unavailable, using fallback ID')
       }
     }
 
